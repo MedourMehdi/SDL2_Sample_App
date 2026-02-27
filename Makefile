@@ -15,10 +15,11 @@ MIXER_SRCS = $(shell grep -l 'SDL2/SDL_mixer.h' $(SRCS) 2>/dev/null)
 TTF_SRCS   = $(shell grep -l 'SDL2/SDL_ttf.h'   $(SRCS) 2>/dev/null)
 
 # Map each source to its target executable name:
-#   - strip leading directory
-#   - remove "test_" prefix
+#   - strip directory (notdir)
+#   - remove "test_" prefix if present (patsubst)
 #   - replace .c with .prg
-TARGETS = $(foreach src,$(SRCS),$(BUILD_DIR)/$(notdir $(patsubst test_%,%,$(src:.c=.prg))))
+#   - add build directory
+TARGETS = $(foreach src,$(SRCS),$(BUILD_DIR)/$(patsubst test_%,%,$(notdir $(src:.c=.prg))))
 
 # Default target
 all: $(TARGETS)
@@ -31,7 +32,7 @@ $(BUILD_DIR):
 # The target is derived from the source name; the source is a prerequisite.
 # After linking, set stack size and strip the binary.
 define compile_c
-$(BUILD_DIR)/$(notdir $(patsubst test_%,%,$(1:.c=.prg))): $(1) | $(BUILD_DIR)
+$(BUILD_DIR)/$(patsubst test_%,%,$(notdir $(1:.c=.prg))): $(1) | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $$@ $$< \
 		$(if $(filter $(1),$(MIXER_SRCS)),-lSDL2_mixer -lSDL2 -lm -liconv -lgem -lxmp) \
 		$(if $(filter $(1),$(TTF_SRCS)),-lSDL2_ttf -lfreetype -lz -lpng16 -lsdl2 -lm -liconv -lgem) \
