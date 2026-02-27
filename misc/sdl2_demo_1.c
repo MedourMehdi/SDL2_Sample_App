@@ -435,6 +435,7 @@ int main(int argc, char *argv[])
 {
     SDL_Window   *window   = NULL;
     SDL_Surface  *surface  = NULL;
+    SDL_Surface  *buffer8  = NULL;
     SDL_Renderer *renderer = NULL;
     Uint32 t0, t1, frames_since_log = 0;
     SDL_bool running;
@@ -468,6 +469,19 @@ int main(int argc, char *argv[])
         SDL_DestroyWindow(window); SDL_Quit(); return 1;
     }
 
+    /* Create a strict 8-bit back-buffer to fix "squashed" TC animations */
+    buffer8 = SDL_CreateRGBSurfaceWithFormat(0, SCREEN_W, SCREEN_H, 8, SDL_PIXELFORMAT_INDEX8);
+    if (buffer8) {
+        SDL_Color colors[256];
+        for (int i = 0; i < 256; i++) {
+            colors[i].r = rgb332_r[i];
+            colors[i].g = rgb332_g[i];
+            colors[i].b = rgb332_b[i];
+            colors[i].a = 255;
+        }
+        SDL_SetPaletteColors(buffer8->format->palette, colors, 0, 256);
+    }
+
     SDL_Log("SDL2 Atari Demo (optimised) — %dx%d pitch=%d bpp=%d",
             SCREEN_W, SCREEN_H, surface->pitch,
             surface->format->BitsPerPixel);
@@ -487,13 +501,14 @@ int main(int argc, char *argv[])
             /* Direct pixel write — no SDL renderer involvement */
             switch (current_scene) {
                 case SCENE_PLASMA:
-                    draw_plasma(surface, frame);
+                    draw_plasma(buffer8, frame);
                     break;
                 case SCENE_CHECKERS:
-                    draw_checkers(surface, frame);
+                    draw_checkers(buffer8, frame);
                     break;
                 default: break;
             }
+            SDL_BlitSurface(buffer8, NULL, surface, NULL);
             /* No SDL_RenderPresent — pixels already in surface */
         } else {
             /* Static scene: only draw on first visit (scene_dirty) */
@@ -524,6 +539,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    SDL_FreeSurface(buffer8);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

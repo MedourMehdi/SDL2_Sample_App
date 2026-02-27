@@ -2,8 +2,8 @@
 #include <math.h>
 #include <stdint.h>
 
-#define WIDTH  800
-#define HEIGHT 600
+#define WIDTH  600
+#define HEIGHT 300
 
 int main(int argc, char *argv[])
 {
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     window = SDL_CreateWindow(
         "SDL2 Plasma Demo (C)",
         20,
-        20,
+        60,
         WIDTH,
         HEIGHT,
         SDL_WINDOW_SHOWN
