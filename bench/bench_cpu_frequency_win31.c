@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    TTF_Font* font = TTF_OpenFont("font.ttf", 16);
+    TTF_Font* font = TTF_OpenFont("../font/font.ttf", 16);
     if (!font) {
         printf("Font load failed\n");
         SDL_DestroyRenderer(ren);

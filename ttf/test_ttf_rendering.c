@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 
     // 2. Load the Font (Size 24)
     // Replace "arial.ttf" with the path to your actual font file
-    TTF_Font* font = TTF_OpenFont("arial.ttf", 24);
+    TTF_Font* font = TTF_OpenFont("../font/arial.ttf", 24);
     if (!font) {
         printf("Font error: %s\n", TTF_GetError());
         return 1;

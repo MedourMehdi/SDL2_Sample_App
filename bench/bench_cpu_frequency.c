@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     // Use Software Renderer to avoid continuous GPU polling
     SDL_Window* win = SDL_CreateWindow("m68k CPU Freq", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 400, 300, 0);
     SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
-    TTF_Font* font = TTF_OpenFont("font.ttf", 18);
+    TTF_Font* font = TTF_OpenFont("../font/font.ttf", 18);
 
     char mhz_str[64] = "Click to Start";
     char cpu_type[64] = "Waiting...";
