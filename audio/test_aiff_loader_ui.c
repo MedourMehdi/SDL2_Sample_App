@@ -394,17 +394,36 @@ int main(int argc, char* argv[]) {
         app.bytes_per_pixel = app.total_len / bar_width_px;
         if (app.total_len < (Uint32)bar_width_px) app.bytes_per_pixel = 0;
     }
-
+    printf("SDL_OpenAudio\n");
     if (SDL_OpenAudio(&wav_spec, NULL) < 0) {
         printf("SDL_OpenAudio failed: %s\n", SDL_GetError());
         return 1;
     }
-    
-    app.window = SDL_CreateWindow("AIFF/WAV Player v2.3", 
-                                   SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-                                   WIN_W, WIN_H, SDL_WINDOW_SHOWN);
-    app.renderer = SDL_CreateRenderer(app.window, -1, SDL_RENDERER_SOFTWARE);
 
+    printf("SDL_CreateWindow\n");
+    app.window = SDL_CreateWindow("AIFF/WAV Player v2.3",
+                                SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                WIN_W, WIN_H, SDL_WINDOW_SHOWN);
+    if (!app.window) {
+        printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
+        SDL_CloseAudio();
+        SDL_free(app.audio_start);
+        SDL_Quit();
+        return 1;
+    }
+
+    printf("SDL_CreateRenderer\n");
+    app.renderer = SDL_CreateRenderer(app.window, -1, SDL_RENDERER_SOFTWARE);
+    if (!app.renderer) {
+        printf("SDL_CreateRenderer failed: %s\n", SDL_GetError());
+        SDL_CloseAudio();
+        SDL_free(app.audio_start);
+        SDL_DestroyWindow(app.window);
+        SDL_Quit();
+        return 1;
+    }
+
+    printf("before draw_ui\n");
     draw_ui();
 
     while (running) {

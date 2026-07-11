@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
     /* 2. Initialize Mixer (Corrected: 2048 chunk size for 68k balance) */
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 8192) < 0) {
         SDL_Log("Mix_OpenAudio failed: %s", Mix_GetError());
         return 1;
     }

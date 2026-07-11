@@ -572,7 +572,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
         return 1;
     }
-
+    SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
     SDL_JoystickEventState(SDL_ENABLE);
 
     /* Create 320×200 window — Atari ST low resolution */
